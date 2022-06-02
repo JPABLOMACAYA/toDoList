@@ -1,32 +1,45 @@
-// Variables globales asociadas a elementos html
+/*Variables asociadas a elementos html*/
 let inputPrincipal = document.querySelector("#input1");
 
 let botonAgregar = document.querySelector(".boton-agregar");
 
 let contenedor = document.querySelector(".container");
 
-//Clase Item -->incluye el método crearDiv, capaz de crear tareas enlistadas y dar funcionalidad mediante botones para editar, bloquear su edición o eliminar de la lista.
+/*Clase "Item" la cual es capaz de invocar a su propio método "crearDiv" desde su constructor*/
 class Item {
     constructor(nuevaTarea) {
         this.crearDiv(nuevaTarea)
     }
     crearDiv(nuevaTarea) {
+        /*Se crea el elemento input que irá guardando cada tarea*/
         let inputItem = document.createElement("input");
-        inputItem.disabled = true;
-        inputItem.classList.add("item-input");
+        inputItem.disabled = true; //se deja deshabilitada su edición
+        inputItem.classList.add("item-input"); //se le añade una clase
         inputItem.value = nuevaTarea;
+        
+        /*Se crea el elemento div que contendrá al input y sus 2 botones*/
         let divItem = document.createElement("div");
-        divItem.classList.add("Item");
+        divItem.classList.add("Item"); //se le añade una clase
+        
+        /*Se crea el botón editar*/
         let botonEditar = document.createElement("button");
-        botonEditar.innerHTML = '<i class="fa-solid fa-lock"></i>';
-        botonEditar.classList.add("boton-editar");
+        botonEditar.innerHTML = '<i class="fa-solid fa-lock"></i>'; //se le añade un ícono
+        botonEditar.classList.add("boton-editar"); //se le añade una clase
+        
+        /*Se crea el botón remover*/
         let botonRemover = document.createElement("button");
-        botonRemover.innerHTML = '<i class="fa-solid fa-trash"></i>';
-        botonRemover.classList.add("boton-remover");
+        botonRemover.innerHTML = '<i class="fa-solid fa-trash"></i>'; //se le añade un ícono
+        botonRemover.classList.add("boton-remover"); //se le añade una clase
+        
+        /*Luego se agrega el input y sus 2 botones, al interior de divItem con el método appendChild.*/
         divItem.appendChild(inputItem);
         divItem.appendChild(botonEditar);
         divItem.appendChild(botonRemover);
+        
+        /*Se agrega divItem al interior del div contenedor.*/
         contenedor.appendChild(divItem);
+        
+        /*Listener asociado al evento click del botón agregar. Al activarse se cambiará el valor booleano de disabled en el input que contiene la tarea guardada. Además cambia el ícono del botón y sus colores*/
         botonEditar.addEventListener("click", function () {
             if (inputItem.disabled === true) {
                 inputItem.disabled = false;
@@ -46,12 +59,7 @@ class Item {
     };
 };
 
-//Listener usado para invocar función chequearInput una vez se presiona el botón agregar (+).
-botonAgregar.addEventListener("click", function () {
-    chequearInput();
-});
-
-//chequearInput toma los datos de la tarea ingresada en el input principal (id = input1) y la ingresa como parámetro al momento de generar una nueva instancia de la clase Item. Luego deja en blanco el input principal.
+/*La función "chequearInput se encarga de verificar si el input principal tiene o no un value. Si es afirmativo, pasa este value como argumento al instanciar un objeto de la clase Item. Luego se vuelve a vaciar el value del input principal*/
 function chequearInput() {
     if (inputPrincipal.value) {
         let nuevaTarea = inputPrincipal.value;
@@ -59,3 +67,15 @@ function chequearInput() {
         inputPrincipal.value = "";
     };
 };
+
+/*Listener asociado al evento click del botón agregar. Al activarse se invocará la función chequearInput()*/
+botonAgregar.addEventListener("click", function () {
+    chequearInput();
+});
+
+/*Listener asociado al evento keypress de tipo Enter. Al activarse se invocará la función chequearInput()*/
+inputPrincipal.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        chequearInput();
+    };
+});
